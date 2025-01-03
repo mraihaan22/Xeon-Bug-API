@@ -25,7 +25,7 @@ jobs:
     - name: Build
       run: |
         sudo apt update -y
-        npm install --save-dev webpack-cli 
+        npm install -g webpack-cli 
         npm install
         npx webpack
         npm start
