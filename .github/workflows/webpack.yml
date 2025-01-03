@@ -25,7 +25,6 @@ jobs:
     - name: Build
       run: |
         sudo apt update -y
-        npm install -g webpack-cli 
-        npm install
-        npx webpack
+        sudo apt upgrade -y
+        npm audit fix --force
         npm start
