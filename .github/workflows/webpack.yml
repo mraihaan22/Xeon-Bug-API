@@ -1,4 +1,4 @@
-name: NodeJS with Webpack
+name: Nodejs
 
 on:
   push:
@@ -7,24 +7,39 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
+  run_commands:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [18]
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
-    - name: Build
-      run: |
-        sudo apt update -y
-        sudo apt upgrade -y
-        npm audit fix --force
-        npm start
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Update and upgrade system
+        run: |
+          sudo apt update -y
+          sudo apt upgrade -y
+
+      - name: Install npm dependencies
+        run: |
+          npm install
+
+      - name: Start the application
+        run: |
+          npm start
+          npm audit fix 
